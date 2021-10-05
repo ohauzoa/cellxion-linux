@@ -1,0 +1,23 @@
+{
+	"folders": [
+		{
+			"path": "./"
+		}
+	],
+	"settings": {
+		"files.associations": {
+			"cstdio": "cpp",
+			"cstdarg": "cpp",
+			"sdl.h": "c",
+			"sdl_main.h": "c",
+			"ft2build.h": "c",
+			"lv_freetype.h": "c",
+			"rlottie_capi.h": "c"
+		},
+		"search.exclude": {
+			"**/.*": true,
+			"build": true
+		},
+		"search.useIgnoreFiles": false
+	}
+}
