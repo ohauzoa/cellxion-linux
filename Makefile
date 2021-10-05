@@ -32,7 +32,7 @@ DEFINES				:= -D SIMULATOR=1 -D LV_BUILD_TEST=0
 INC 				:= -I./ui/simulator/inc/ -I./ -I./lvgl/ -I./lv_libs/ -I/usr/include/freetype2
 LDLIBS	 			:= -lSDL2 -lm -L/usr/local/lib -lfreetype -lrlottie
 #LDLIBS	 			:= -lSDL2 -lm -LC:/msys64/mingw64/lib
-BIN 				:= $(BIN_DIR)/demo
+BIN 				:= $(BIN_DIR)/lvgl
 
 COMPILE				= $(CC) $(CFLAGS) $(INC) $(DEFINES)
 

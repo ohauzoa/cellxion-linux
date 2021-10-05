@@ -38,7 +38,6 @@ static void drag_event_handler(lv_event_t * e);
 static const lv_font_t * font_timer;
 static const lv_font_t * font_large;
 static const lv_font_t * font_normal;
-static const lv_font_t * font_big64;
 
 static lv_obj_t * tv;
 static lv_obj_t * passwd;
@@ -681,7 +680,7 @@ void lv_cellxion_start(void)
     //lv_obj_t * label = lv_label_create(lv_scr_act());
     //lv_obj_add_style(label, &style, 0);
     //lv_label_set_text(label, "Hello world");
-    font_big64 = info.font;
+    //font_big64 = &lv_font_montserrat_48;
 
 
 
@@ -704,7 +703,7 @@ void lv_cellxion_start(void)
     lv_style_set_text_font(&style_timer, font_timer);
 
     lv_style_init(&style_roller);
-    lv_style_set_text_font(&style_roller, font_big64);
+    lv_style_set_text_font(&style_roller, info.font);
 
     lv_style_init(&style_text_muted);
     lv_style_set_text_opa(&style_text_muted, LV_OPA_60);

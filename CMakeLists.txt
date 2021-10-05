@@ -18,6 +18,7 @@ SET(CMAKE_CXX_FLAGS "-O3")
 #find_package(lua51 REQUIRED)
 find_package(SDL2 REQUIRED SDL2)
 find_package(Freetype REQUIRED)
+#find_package(Rlottie REQUIRED)
 
 if(NOT FREETYPE_FOUND)
   message(STATUS "freetype2:   NO")
@@ -33,7 +34,7 @@ include_directories(
     ${SDL2_MIXER_INCLUDE_DIRS}
     ${OPENGL_INCLUDE_DIRS}
     ${FREETYPE_INCLUDE_DIRS}
-#    ${LUA_INCLUDE_DIRS}
+    ${LOTTIE_INCLUDE_DIRS}
 )
 
 link_directories (
@@ -43,7 +44,7 @@ link_directories (
     ${SDL2_MIXER_LIBRARY_DIRS}
     ${OPENGL_LIBRARY_DIRS}
     ${FREETYPE_INCLUDE_DIRS}
-#    ${LUA_INCLUDE_DIRS}
+    ${LOTTIE_INCLUDE_DIRS}
 )
     
     #add_executable(main main.c lv_lib_rlottie/lv_rlottie_example_fingerprint.c ${SOURCES} ${INCLUDES})
