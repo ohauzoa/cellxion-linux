@@ -21,7 +21,6 @@
 #include "lv_drivers/indev/mousewheel.h"
 #include "lv_libs/lv_png.h"
 #include "lv_libs/cellxion.h"
-
 //#include "serialport.h"
 
 /*********************

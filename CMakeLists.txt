@@ -6,8 +6,8 @@ set(CMAKE_C_STANDARD 11)#C11
 
 INCLUDE_DIRECTORIES(${PROJECT_SOURCE_DIR})
 
-file(GLOB_RECURSE INCLUDES "images/*.h" "lv_drivers/*.h" "lv_libs/*.h"  "lvgl/*.h"  "./*.h" )
-file(GLOB_RECURSE SOURCES  "images/*.c" "lv_drivers/*.c" "lv_libs/*.c"  "lvgl/*.c"  )
+file(GLOB_RECURSE INCLUDES "./images/*.h" "./lv_drivers/*.h" "./lv_libs/*.h"  "./lvgl/*.h"  "./*.h" )
+file(GLOB_RECURSE SOURCES  "./images/*.c" "./lv_drivers/*.c" "./lv_libs/*.c"  "./lvgl/*.c"  )
 
 #include(${CMAKE_CURRENT_SOURCE_DIR}/lv_lib_rlottie/CMakeLists.txt)
 #include(${CMAKE_CURRENT_SOURCE_DIR}/lv_libs)
