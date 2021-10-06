@@ -660,10 +660,6 @@ static void setting_create(lv_obj_t * parent)
 
 void lv_cellxion_start(void)
 {
-    /*Init freetype library
-    *Cache max 64 faces and 1 size*/
-    lv_freetype_init(64, 1, 0);
-
     /*Create a font*/
     static lv_ft_info_t info;
     info.name = "../images/arial.ttf";

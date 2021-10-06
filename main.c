@@ -22,6 +22,7 @@
 #include "lv_libs/lv_png.h"
 #include "lv_libs/cellxion.h"
 //#include "serialport.h"
+#include "lv_libs/lv_freetype.h"
 
 /*********************
  *      DEFINES
@@ -194,6 +195,11 @@ int main(int argc, char **argv)
 	hal_init();
 	lv_png_init();
 
+
+
+    /*Init freetype library
+    *Cache max 64 faces and 1 size*/
+    lv_freetype_init(64, 1, 0);
 
 
 

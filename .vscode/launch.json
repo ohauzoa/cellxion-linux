@@ -9,7 +9,7 @@
             "name": "(gdb) Launch",
             "type": "cppdbg",
             "request": "launch",
-            "program": "${workspaceFolder}/bin/lvgl",
+            "program": "${workspaceFolder}/bin/cellxion",
             "args": ["master", "--max_len", "1028", "--runs", "100000", "--target", "${fileDirname}/../../targets/hevd" ,"--address", "tcp://localhost:31337"],
             "stopAtEntry": false,
             "cwd": "${fileDirname}",
