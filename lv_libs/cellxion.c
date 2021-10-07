@@ -5,6 +5,7 @@
  *      Author: ForYou
  */
 
+
 #include "../lvgl/lvgl.h"
 #include <stdio.h>
 #include <stdlib.h>
@@ -38,6 +39,7 @@ static void drag_event_handler(lv_event_t * e);
 static const lv_font_t * font_timer;
 static const lv_font_t * font_large;
 static const lv_font_t * font_normal;
+static const lv_font_t * font_temp;
 
 static lv_obj_t * tv;
 static lv_obj_t * passwd;
@@ -663,20 +665,22 @@ void lv_cellxion_start(void)
     /*Create a font*/
     static lv_ft_info_t info;
     info.name = "../images/arial.ttf";
-    info.weight = 64;
+    info.weight = 70;
     info.style = FT_FONT_STYLE_NORMAL;
-    lv_ft_font_init(&info);
 
-    /*Create style with the new font*/
-    static lv_style_t style;
-    lv_style_init(&style);
-    lv_style_set_text_font(&style, info.font);
+
+    if(lv_ft_font_init(&info)){
+        font_temp = info.font;
+    }
+    else{
+        font_temp = LV_FONT_DEFAULT;
+    }
+
 
     /*Create a label with the new style*/
     //lv_obj_t * label = lv_label_create(lv_scr_act());
     //lv_obj_add_style(label, &style, 0);
     //lv_label_set_text(label, "Hello world");
-    //font_big64 = &lv_font_montserrat_48;
 
 
 
@@ -699,7 +703,7 @@ void lv_cellxion_start(void)
     lv_style_set_text_font(&style_timer, font_timer);
 
     lv_style_init(&style_roller);
-    lv_style_set_text_font(&style_roller, info.font);
+    lv_style_set_text_font(&style_roller, font_temp);
 
     lv_style_init(&style_text_muted);
     lv_style_set_text_opa(&style_text_muted, LV_OPA_60);
