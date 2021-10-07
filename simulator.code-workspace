@@ -12,7 +12,12 @@
 			"sdl_main.h": "c",
 			"ft2build.h": "c",
 			"lv_freetype.h": "c",
-			"rlottie_capi.h": "c"
+			"rlottie_capi.h": "c",
+			"sdl_mixer_ext.h": "c",
+			"asoundlib.h": "c",
+			"sdl_audio.h": "c",
+			"tsf.h": "c",
+			"sdl_stdinc.h": "c"
 		},
 		"search.exclude": {
 			"**/.*": true,

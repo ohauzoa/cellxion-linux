@@ -662,10 +662,14 @@ static void setting_create(lv_obj_t * parent)
 
 void lv_cellxion_start(void)
 {
+    /*Init freetype library
+    *Cache max 64 faces and 1 size*/
+    lv_freetype_init(64, 1, 0);
+
     /*Create a font*/
     static lv_ft_info_t info;
-    info.name = "../images/arial.ttf";
-    info.weight = 70;
+    info.name = "images/arial.ttf";
+    info.weight = 64;
     info.style = FT_FONT_STYLE_NORMAL;
 
 
@@ -851,8 +855,28 @@ static void roller_event_handler(lv_event_t * e)
     }
 }
 
+
+
+
+
+
+
+
+
+
+
+static void add_step_event_cb(lv_event_t * e)
+{
+    LV_LOG_USER("add_step_event_cb Clicked");
+    sound_click();
+}
+
+
+
+
 static void treatment_create(lv_obj_t * parent)
 {
+    
     lv_obj_set_flex_flow(parent, LV_FLEX_FLOW_ROW_WRAP);
     static lv_style_t style;
     lv_style_init(&style);
@@ -1087,7 +1111,7 @@ static void treatment_create(lv_obj_t * parent)
    	lv_obj_center(add_session_label);
 
    	lv_obj_add_style(add_session_button, &style_sel, 0);
-
+    lv_obj_add_event_cb(add_session_button, add_step_event_cb, LV_EVENT_PRESSED, NULL);
 
 
 

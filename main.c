@@ -13,6 +13,7 @@
 #include <unistd.h>
 #define SDL_MAIN_HANDLED /*To fix SDL's "undefined reference to WinMain" issue*/
 #include <SDL2/SDL.h>
+#include <SDL2/SDL_mixer_ext.h>
 #include "lvgl/lvgl.h"
 #include "lv_drivers/display/monitor.h"
 #include "lv_drivers/display/fbdev.h"
@@ -21,8 +22,10 @@
 #include "lv_drivers/indev/mousewheel.h"
 #include "lv_libs/lv_png.h"
 #include "lv_libs/cellxion.h"
-//#include "serialport.h"
 #include "lv_libs/lv_freetype.h"
+#include "lv_libs/lv_audio.h"
+
+//#include "serialport.h"
 
 /*********************
  *      DEFINES
@@ -86,6 +89,12 @@ static int amp_loop = 0;
 unsigned char msg[10];
 char rx_matcher[20];
 
+static Audio * sound;
+
+void sound_click(void)
+{
+    playSoundFromMemory(sound, SDL_MIX_MAXVOLUME);
+}
 
 void check_sum(const char *buf, int cnt)
 {
@@ -180,8 +189,6 @@ void test_port(int sv1, int sv2)
  *   GLOBAL FUNCTIONS
  **********************/
 
-
-
 int main(int argc, char **argv)
 {
 	setvbuf(stdout, NULL, _IONBF, 0); // Windows �� Eclipse�� Console â ���� �� ������ ���� ����
@@ -193,13 +200,17 @@ int main(int argc, char **argv)
 
 	/*Initialize the HAL (display, input devices, tick) for LVGL*/
 	hal_init();
+
 	lv_png_init();
+    /* Init Simple-SDL2-Audio */
+    initAudio();
 
-
-
-    /*Init freetype library
-    *Cache max 64 faces and 1 size*/
-    lv_freetype_init(64, 1, 0);
+    /* Play music and a sound */
+    playMusic("./sounds/highlands.wav", SDL_MIX_MAXVOLUME);
+    sound = createAudio("./sounds/door1.wav", 0, SDL_MIX_MAXVOLUME / 2);
+    /* Override music, play another sound */
+	//playSound("./sounds/door1.wav", SDL_MIX_MAXVOLUME / 2);
+//    playMusic("./sounds/road.wav", SDL_MIX_MAXVOLUME);
 
 
 
@@ -211,6 +222,8 @@ int main(int argc, char **argv)
 
 	lv_cellxion_start();
 
+
+	
 	while(1) {
 		/* Periodically call the lv_task handler.
 		 * It could be done in a timer interrupt or an OS task too.*/
@@ -233,6 +246,9 @@ static void hal_init(void)
 {
 	/* Use the 'monitor' driver which creates window on PC's monitor to simulate a display*/
 	monitor_init();
+
+
+
 	/* Tick init.
 	* You have to call 'lv_tick_inc()' in periodically to inform LittelvGL about
 	* how much time were elapsed Create an SDL thread to do this*/
