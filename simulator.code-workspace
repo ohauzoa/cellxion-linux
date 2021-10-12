@@ -1,7 +1,7 @@
 {
 	"folders": [
 		{
-			"path": "./"
+			"path": "."
 		}
 	],
 	"settings": {
@@ -17,7 +17,8 @@
 			"asoundlib.h": "c",
 			"sdl_audio.h": "c",
 			"tsf.h": "c",
-			"sdl_stdinc.h": "c"
+			"sdl_stdinc.h": "c",
+			"mouse.h": "c"
 		},
 		"search.exclude": {
 			"**/.*": true,

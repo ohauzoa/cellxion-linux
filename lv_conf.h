@@ -29,6 +29,7 @@
 /*Images pixels with this color will not be drawn if they are  chroma keyed)*/
 #define LV_COLOR_CHROMA_KEY    lv_color_hex(0x00ff00)         /*pure green*/
 
+
 /*=========================
    MEMORY SETTINGS
  *=========================*/
@@ -50,6 +51,7 @@
 
 /*Use the standard `memcpy` and `memset` instead of LVGL's own functions. (Might or might not be faster).*/
 #define LV_MEMCPY_MEMSET_STD    0
+
 
 
 /*====================
@@ -128,7 +130,10 @@ e.g. "stm32f769xx.h" or "stm32f429xx.h"*/
 /*Use NXP's VG-Lite GPU iMX RTxxx platforms*/
 #define LV_USE_GPU_NXP_VG_LITE   0
 
-#define LV_USE_GPU_SDL 0
+#define  LV_USE_GPU_SDL   0
+
+//#define  CONFIG_LV_USE_EXTERNAL_RENDERER  0 
+
 /*-------------
  * Logging
  *-----------*/
@@ -210,6 +215,11 @@ e.g. "stm32f769xx.h" or "stm32f429xx.h"*/
 #if LV_ENABLE_GC != 0
 #  define LV_GC_INCLUDE "gc.h"                           /*Include Garbage Collector related things*/
 #endif /*LV_ENABLE_GC*/
+
+/*1: Enable API to take snapshot for object*/
+#define LV_USE_SNAPSHOT         1
+
+
 
 /*=====================
  *  COMPILER SETTINGS
@@ -494,6 +504,42 @@ e.g. "stm32f769xx.h" or "stm32f429xx.h"*/
 
 /*A layout similar to Grid in CSS.*/
 #define LV_USE_GRID     1
+
+/*---------------------
+ * 3rd party libraries
+ *--------------------*/
+
+/*File system interfaces for common APIs
+ *To enable set a driver letter for that API*/
+#define LV_USE_FS_STDIO 1
+//#define LV_FS_STDIO_PATH "/home/pi/Desktop/vscode/cellxion-linux"    /*Set the working directory. If commented it will be "./" */
+
+//#define LV_USE_FS_POSIX 1
+//#define LV_FS_POSIX_PATH "/home/pi/Desktop/vscode/cellxion-linux"    /*Set the working directory. If commented it will be "./" */
+
+//#define LV_USE_FS_FATFS 1
+
+/*PNG decoder library*/
+#define LV_USE_PNG  1
+
+/*BMP decoder library*/
+#define LV_USE_BMP  1
+
+/* JPG + split JPG decoder library.
+ * Split JPG is a custom format optimized for embedded systems. */
+#define  LV_USE_SJPG     0
+
+/*GIF decoder library*/
+#define  LV_USE_GIF      0
+
+/*QR code library*/
+#define  LV_USE_QRCODE   0
+
+/*FreeType library*/
+#define  LV_USE_FREETYPE 1
+
+/*Memory used by FreeType to cache characters [bytes]*/
+#define  LV_FREETYPE_CACHE_SIZE  (64 * 1024)
 
 /*==================
 * EXAMPLES

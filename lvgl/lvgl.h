@@ -14,9 +14,9 @@ extern "C" {
  * CURRENT VERSION OF LVGL
  ***************************/
 #define LVGL_VERSION_MAJOR 8
-#define LVGL_VERSION_MINOR 0
+#define LVGL_VERSION_MINOR 1
 #define LVGL_VERSION_PATCH 0
-#define LVGL_VERSION_INFO ""
+#define LVGL_VERSION_INFO "dev"
 
 /*********************
  *      INCLUDES
@@ -26,6 +26,7 @@ extern "C" {
 #include "src/misc/lv_timer.h"
 #include "src/misc/lv_math.h"
 #include "src/misc/lv_async.h"
+#include "src/misc/lv_anim_timeline.h"
 
 #include "src/hal/lv_hal.h"
 
@@ -69,6 +70,8 @@ extern "C" {
 #include "src/extra/widgets/lv_widgets.h"
 #include "src/extra/layouts/lv_layouts.h"
 #include "src/extra/themes/lv_themes.h"
+#include "src/extra/others/lv_others.h"
+#include "src/extra/libs/lv_libs.h"
 
 /*********************
  *      DEFINES
