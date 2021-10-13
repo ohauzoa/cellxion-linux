@@ -2,6 +2,8 @@
     "C_Cpp.default.configurationProvider": "ms-vscode.cmake-tools",
     "files.associations": {
         "lvgl.h": "c",
-        "test.h": "c"
+        "test.h": "c",
+        "worker.h": "c",
+        "curebuffer.h": "c"
     }
 }

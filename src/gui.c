@@ -51,13 +51,233 @@ lv_chart_series_t * ser2;
 uint32_t pcnt = sizeof(ecg_sample) / sizeof(ecg_sample[0]);
 uint32_t cnt = 0;
 
+
+#include "lvgl/lvgl.h"
+
+#define RPM_VAL_RANGE        4000
+#define RPM_VAL_WARNNING     3000
+#define RPM_ARC_RANGE        240
+#define RPM_ARC_OFFSET       150
+#define RPM_ARC_WARNNING     180
+#define RPM_ARC_RADIUS       212
+#define RPM_MIDDLE_X         260
+#define RPM_MIDDLE_Y         258
+
+#define OIL_VAL_RANGE        100
+#define OIL_VAL_WARNNING     10
+#define OIL_ARC_RANGE        90
+#define OIL_ARC_OFFSET       180
+#define OIL_ARC_RADIUS       196
+#define OIL_MIDDLE_X         716
+#define OIL_MIDDLE_Y         240
+
+#define COOLANT_VAL_RANGE    120
+#define COOLANT_VAL_WARNNING 100
+#define COOLANT_ARC_RANGE    90
+#define COOLANT_ARC_OFFSET   180
+#define COOLANT_ARC_WARNNING 75
+#define COOLANT_ARC_RADIUS   196
+#define COOLANT_MIDDLE_X     969
+#define COOLANT_MIDDLE_Y     240
+
+
+lv_style_t arc_red_style;
+lv_style_t arc_blue_style;
+lv_style_t arc_mark_style;
+lv_style_t arc_opa0_style;
+
+lv_obj_t *label_rpm;
+lv_obj_t *arc_rpm;
+lv_obj_t *mark_rpm;
+
+lv_obj_t *label_oil;
+lv_obj_t *arc_oil;
+lv_obj_t *mark_oil;
+
+lv_obj_t *label_coolant;
+lv_obj_t *arc_coolant;
+lv_obj_t *mark_coolant;
+
+static void gauge_init_style(void)
+{
+    lv_style_init(&arc_mark_style);
+    lv_style_set_arc_opa(&arc_mark_style, LV_OPA_100);
+    lv_style_set_arc_rounded(&arc_mark_style, 0);
+    lv_style_set_arc_color(&arc_mark_style, lv_color_make(95, 70, 70));
+    lv_style_set_arc_width(&arc_mark_style, 100);
+
+    lv_style_init(&arc_blue_style);
+    lv_style_set_arc_opa(&arc_blue_style, LV_OPA_50);
+    lv_style_set_arc_rounded(&arc_blue_style, 0);
+    lv_style_set_arc_color(&arc_blue_style, lv_color_make(200, 200, 250));
+    lv_style_set_arc_width(&arc_blue_style, 80);
+
+    lv_style_init(&arc_red_style);
+    lv_style_set_arc_opa(&arc_red_style, LV_OPA_50);
+    lv_style_set_arc_rounded(&arc_red_style, 0);
+    lv_style_set_arc_color(&arc_red_style, lv_color_make(250, 20, 20));
+    lv_style_set_arc_width(&arc_red_style, 80);
+
+    lv_style_init(&arc_opa0_style);
+    lv_style_set_arc_opa(&arc_opa0_style, LV_OPA_0);
+    lv_style_set_arc_rounded(&arc_opa0_style, 0);
+}
+
+static void gauge_draw(lv_obj_t **label, lv_obj_t **arc, lv_obj_t **mark, uint16_t x, uint16_t y, uint16_t radius, uint16_t arc_offset)
+{
+    /* Label */
+    *label = lv_label_create(lv_scr_act());
+    lv_obj_set_pos(*label, x, y);
+//    lv_label_set_text(*label, "0");
+
+    /* Gauge bar */
+    *arc = lv_arc_create(lv_scr_act());
+    lv_arc_set_angles(*arc, 0, 0);
+    lv_arc_set_bg_angles(*arc, 0, 0);
+    lv_arc_set_rotation(*arc, arc_offset);
+
+    lv_obj_set_pos(*arc, x-radius, y-radius);
+    lv_obj_set_size(*arc, radius*2, radius*2);
+    lv_obj_add_style(*arc, &arc_red_style, LV_PART_MAIN);
+    lv_obj_add_style(*arc, &arc_blue_style, LV_PART_INDICATOR);
+
+    lv_obj_remove_style(*arc, NULL, LV_PART_KNOB);
+    lv_obj_clear_flag(*arc, LV_OBJ_FLAG_CLICKABLE);
+
+    /* Gauge arrow */
+    *mark = lv_arc_create(lv_scr_act());
+    lv_arc_set_angles(*mark, 0, 0);
+    lv_arc_set_bg_angles(*mark, 0, 0);
+    lv_arc_set_rotation(*mark, arc_offset);
+
+    lv_obj_set_pos(*mark, x-radius, y-radius);
+    lv_obj_set_size(*mark, radius*2, radius*2);
+    lv_obj_add_style(*mark, &arc_opa0_style, LV_PART_MAIN);
+    lv_obj_add_style(*mark, &arc_mark_style, LV_PART_INDICATOR);
+
+    lv_obj_remove_style(*mark, NULL, LV_PART_KNOB);
+    lv_obj_clear_flag(*mark, LV_OBJ_FLAG_CLICKABLE);
+}
+
+static void gauge_update(uint8_t mode, uint16_t value)
+{
+    char val_string[8] = {0, };
+
+    uint8_t  val_check = 0;
+    uint16_t val_range, val_warn;
+    uint16_t arc_range, arc_offset, arc_warn, arc_value;
+
+    lv_obj_t *label, *arc, *mark;
+
+    switch(mode)
+    {
+        case 0:
+            val_range  = RPM_VAL_RANGE;
+            val_warn   = RPM_VAL_WARNNING;
+            arc_range  = RPM_ARC_RANGE;
+            arc_offset = RPM_ARC_OFFSET;
+            arc_warn   = RPM_ARC_WARNNING;
+
+            label = label_rpm;
+            arc   = arc_rpm;
+            mark  = mark_rpm;
+            break;
+
+        case 1:
+            val_range  = OIL_VAL_RANGE;
+            val_warn   = OIL_VAL_WARNNING;
+            arc_range  = OIL_ARC_RANGE;
+            arc_offset = OIL_ARC_OFFSET;
+            arc_warn   = 0;
+
+            label = label_oil;
+            arc   = arc_oil;
+            mark  = mark_oil;
+            break;
+
+        case 2:
+            val_range  = COOLANT_VAL_RANGE;
+            val_warn   = COOLANT_VAL_WARNNING;
+            arc_range  = COOLANT_ARC_RANGE;
+            arc_offset = COOLANT_ARC_OFFSET;
+            arc_warn   = COOLANT_ARC_WARNNING;
+
+            label = label_coolant;
+            arc   = arc_coolant;
+            mark  = mark_coolant;
+            break;
+
+        default:
+            printf("ERROR : invalid mode = %d\r\n", mode);
+            return;
+    }
+
+//    sprintf(val_string, "%d", value);
+//    lv_label_set_text(label, val_string);
+
+    arc_value = (value * arc_range) / val_range;
+    if(mode == 1) val_check = value <= val_warn;
+    else          val_check = value > val_warn;
+
+    if(val_check)
+    {
+        lv_arc_set_angles(arc, 0, arc_warn);
+        lv_arc_set_bg_angles(arc, arc_warn, arc_value);
+    }
+    else
+    {
+        lv_arc_set_angles(arc, 0, arc_value);
+        lv_arc_set_bg_angles(arc, 0, 0);
+    }
+    lv_arc_set_angles(mark, arc_value, arc_value+1);
+}
+
+void exam_gague_draw(void)
+{
+    gauge_init_style();
+    gauge_draw(&label_rpm, &arc_rpm, &mark_rpm, RPM_MIDDLE_X, RPM_MIDDLE_Y, RPM_ARC_RADIUS, RPM_ARC_OFFSET);
+//    gauge_draw(&label_oil, &arc_oil, &mark_oil, OIL_MIDDLE_X, OIL_MIDDLE_Y, OIL_ARC_RADIUS, OIL_ARC_OFFSET);
+//    gauge_draw(&label_coolant, &arc_coolant, &mark_coolant, COOLANT_MIDDLE_X, COOLANT_MIDDLE_Y, COOLANT_ARC_RADIUS, COOLANT_ARC_OFFSET);
+}
+
+uint8_t val1 = 0;
+uint8_t val2 = 0;
+void exam_gauge_update(void)
+{
+    if(val1 <= 100)
+    {
+        gauge_update(0, val1*4000/100);
+//        gauge_update(1, val1);
+//        gauge_update(2, val1*120/100);
+        //usleep(50 * 1000);
+        val1++;
+        if(val1 == 100) val2 = 100;
+    }
+    else
+    {
+        if(val2 > 0)
+        {
+            val2--;
+            if(val2 == 0) val1 = 0;
+            gauge_update(0, val2*4000/100);
+//            gauge_update(1, val2);
+//            gauge_update(2, val2*120/100);
+            //usleep(50 * 1000);
+        }
+    }
+
+}
+
 void add_data(void)
 {
-    
+    float res = 0;    
     if(++cnt >= pcnt) cnt = 0;
-
+//    res = HighPassFilter_Update(&filter, ecg_sample[cnt]);
     lv_chart_set_next_value(chart, ser1, ecg_sample[cnt]);
-    //printf("->%d\n", cnt);
+    lv_chart_set_next_value(chart, ser2, res + 100);
+    //printf("->%d, %f\n", ecg_sample[cnt], res);
+
+    exam_gauge_update();
 
 }
 
@@ -85,11 +305,11 @@ void test(void)
 
     /*Add two data series*/
     ser1 = lv_chart_add_series(chart, lv_palette_main(LV_PALETTE_RED), LV_CHART_AXIS_PRIMARY_Y);
-    ser2 = lv_chart_add_series(chart, lv_palette_main(LV_PALETTE_GREEN), LV_CHART_AXIS_SECONDARY_Y);
-    lv_chart_set_range(chart, LV_CHART_AXIS_PRIMARY_Y, 1000, -1000);
+    ser2 = lv_chart_add_series(chart, lv_palette_main(LV_PALETTE_GREEN), LV_CHART_AXIS_PRIMARY_Y);
+    lv_chart_set_range(chart, LV_CHART_AXIS_PRIMARY_Y, -1000, 1000);
 
     //lv_chart_set_zoom_x(chart, 100);
-    lv_chart_set_point_count(chart, 500);
+    //lv_chart_set_point_count(chart, 500);
     /*Do not display points on the data*/
     lv_obj_set_style_size(chart, 0, LV_PART_INDICATOR);
 
@@ -101,12 +321,23 @@ void test(void)
     lv_obj_set_size(cw, 100, 100);
     lv_obj_set_pos(cw, 500,50);
 
-lv_obj_t * arc = lv_arc_create(lv_scr_act());
-lv_arc_set_bg_start_angle(arc, 0);
-lv_arc_set_bg_end_angle(arc, 360);
-lv_arc_set_start_angle(arc, 0);
-lv_arc_set_end_angle(arc, 0);
+    lv_obj_t * arc = lv_arc_create(lv_scr_act());
+    lv_arc_set_bg_start_angle(arc, 0);
+    lv_arc_set_bg_end_angle(arc, 360);
+    lv_arc_set_start_angle(arc, 0);
+    lv_arc_set_end_angle(arc, 0);
 
+
+    exam_gague_draw();
+
+
+}
+
+void test1(void)
+{
+
+
+    exam_gague_draw();
 
 
 }

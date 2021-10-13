@@ -52,7 +52,7 @@ add_compile_definitions(LV_CONF_INCLUDE_SIMPLE)
 #target_link_libraries(main PRIVATE SDL2 lv_lib_rlottie)
 
 
-target_link_libraries(${PROJECT_NAME} PRIVATE SDL2 freetype )
+target_link_libraries(${PROJECT_NAME} PRIVATE SDL2 freetype m)
 
 
 add_custom_target (run COMMAND ${EXECUTABLE_OUTPUT_PATH}/${PROJECT_NAME})

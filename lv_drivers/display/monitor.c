@@ -345,7 +345,7 @@ static void window_create(monitor_t * m)
 {
     m->window = SDL_CreateWindow("TFT Simulator",
                               SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED,
-                              MONITOR_HOR_RES * MONITOR_ZOOM, MONITOR_VER_RES * MONITOR_ZOOM, 0);       /*last param. SDL_WINDOW_BORDERLESS to hide borders*/
+                              MONITOR_HOR_RES * MONITOR_ZOOM, MONITOR_VER_RES * MONITOR_ZOOM, SDL_WINDOW_BORDERLESS);       /*last param. SDL_WINDOW_BORDERLESS to hide borders*/
 
     m->renderer = SDL_CreateRenderer(m->window, -1, SDL_RENDERER_SOFTWARE);
     m->texture = SDL_CreateTexture(m->renderer,

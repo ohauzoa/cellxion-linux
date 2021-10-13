@@ -199,9 +199,9 @@ int main(int argc, char **argv)
     *Cache max 64 faces and 1 size*/
     lv_freetype_init(64, 1, 0);
 
-    /*Create a font*/
+    
     static lv_ft_info_t info;
-    info.name = "images/arial.ttf";
+    info.name = "../images/arial.ttf";
     info.weight = 64;
     info.style = FT_FONT_STYLE_NORMAL;
 
@@ -220,8 +220,8 @@ int main(int argc, char **argv)
     initAudio();
 
     /* Play music and a sound */
-    //playMusic("sounds/highlands.wav", SDL_MIX_MAXVOLUME);
-    //sound = createAudio("sounds/door1.wav", 0, SDL_MIX_MAXVOLUME / 2);
+    playMusic("../sounds/highlands.wav", SDL_MIX_MAXVOLUME);
+    sound = createAudio("../sounds/door1.wav", 0, SDL_MIX_MAXVOLUME / 2);
     /* Override music, play another sound */
 	//playSound("./sounds/door1.wav", SDL_MIX_MAXVOLUME / 2);
 //    playMusic("./sounds/road.wav", SDL_MIX_MAXVOLUME);
